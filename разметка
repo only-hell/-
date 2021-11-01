@@ -1,0 +1,156 @@
+import sys
+
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
+from PyQt5.QtWidgets import QMainWindow, QLabel
+from PyQt5.QtWidgets import QLineEdit
+import json
+from PyQt5.QtWidgets import *
+
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setGeometry(300, 300, 300, 300)
+        self.setWindowTitle('Text manager')
+        self.btn1 = QPushButton('Word', self)
+        self.btn1.resize(100, 100)
+        self.btn1.move(170, 140)
+        self.btn1.clicked.connect(self.showDialog)
+        self.btn2 = QPushButton('Text file', self)
+        self.btn2.resize(100, 100)
+        self.btn2.move(30, 140)
+        self.btn2.clicked.connect(self.open_third_form)
+
+        self.name_label = QLabel(self)
+        self.name_label.setText("Здравствуйте, выберите формат файла,")
+        self.name_label.move(60, 90)
+        self.name_label = QLabel(self)
+        self.name_label.setText("который хотите прикрепить.")
+        self.name_label.move(60, 105)
+
+    def showDialog(self):
+        fname, _ = QFileDialog.getOpenFileName(self, 'Load file', '', "Json Files (*.json)")
+        if fname:
+            with open(fname, 'r') as input_data:
+                graph = json.load(input_data)
+            self.openFile(graph)
+        else:
+            QMessageBox.warning(self, 'Error', "Файл не выбран.")
+
+    def openFile(self, printResult):
+        """Подготовка результатов"""
+        """Из переменной graph получаю массив printResult"""
+        for result in printResult:
+            self.lbl.setText(self.lbl.text()+"\n"+result)
+
+    def open_third_form(self):
+        self.third_form = ThirdForm(self, "")
+        self.third_form.show()
+
+
+
+
+
+
+
+class ThirdForm(QWidget):
+    def __init__(self, *args):
+        super().__init__()
+        self.initUI(args)
+
+    def initUI(self, args):
+        self.setGeometry(300, 300, 300, 300)
+        self.setWindowTitle('Text manager Text file')
+
+        self.btn5 = QPushButton('Отправить', self)
+        self.btn5.resize(self.btn5.sizeHint())
+        self.btn5.move(100, 150)
+        self.btn5.clicked.connect(self.open_fourth_form)
+
+        self.label = QLabel(self)
+
+        self.label.move(40, 30)
+
+        self.text_label = QLabel(self)
+        self.text_label.setText("Пожалуйста введите текст.")
+        self.text_label.move(100, 90)
+
+        self.text_input = QLineEdit(self)
+        self.text_input.move(100, 110)
+
+        self.lbl = QLabel(args[-1], self)
+        self.lbl.adjustSize()
+
+    def open_fourth_form(self):
+        self.fourth_form = FourthForm(self, "")
+        self.fourth_form.show()
+
+
+class FourthForm(QWidget):
+    def __init__(self, *args):
+        super().__init__()
+        self.initUI(args)
+
+    def initUI(self, args):
+        self.setGeometry(300, 300, 300, 300)
+        self.setWindowTitle('Text manager Text file')
+
+        self.btn6 = QPushButton('Отправить', self)
+        self.btn6.resize(self.btn6.sizeHint())
+        self.btn6.move(100, 150)
+        self.btn6.clicked.connect(self.open_fifth_form)
+        self.label = QLabel(self)
+        self.label.move(40, 30)
+        self.text_label = QLabel(self)
+        self.text_label.setText("Пожалуйста введите текст вопроса.")
+        self.text_label.move(100, 90)
+        self.text_input = QLineEdit(self)
+        self.text_input.move(100, 110)
+
+        self.lbl = QLabel(args[-1], self)
+        self.lbl.adjustSize()
+
+    def open_fifth_form(self):
+        self.fifth_form = FifthForm(self, "")
+        self.fifth_form.show()
+
+
+class FifthForm(QWidget):
+    def __init__(self, *args):
+        super().__init__()
+        self.initUI(args)
+
+    def initUI(self, args):
+        self.setGeometry(300, 300, 300, 300)
+        self.setWindowTitle('Text manager Answer')
+        self.lbl = QLabel(args[-1], self)
+        self.lbl.adjustSize()
+
+        self.text_label1 = QLabel(self)
+        self.text_label2 = QLabel(self)
+        self.text_label3 = QLabel(self)
+        self.text_label4 = QLabel(self)
+        self.text_label1.setText("К сожалению результатов по вашему запросу ")
+        self.text_label2.setText("не найдено. Попробуйте еще раз сформулировав")
+        self.text_label3.setText("более точный вопрос или приложите больше")
+        self.text_label4.setText("информации для поиска.")
+        self.text_label1.move(40, 90)
+        self.text_label2.move(40, 105)
+        self.text_label3.move(40, 120)
+        self.text_label4.move(40, 135)
+
+
+def hello(self):
+    text = self.text_input.text()  # Получим текст из поля ввода
+    self.label.setText(f"Привет, {text}")
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = Example()
+    ex.show()
+    sys.exit(app.exec())
+
